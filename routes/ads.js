@@ -3,6 +3,7 @@ const router = express.Router();
 const ads = require('../services/ads');
 
 router.get('/getAdsList', async function(req, res, next) {
+  
   try {
     res.json(await ads.getAdsList());
   } catch (err) {
