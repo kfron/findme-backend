@@ -7,6 +7,7 @@ router.post('/login', async function(req, res, next) {
   let email = req.body.email;
   let password = req.body.password;
   let dbPassword = null
+  
   try {
     dbPassword = (await users.getUser(email))[0]?.password;
   } catch (err) {
