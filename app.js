@@ -19,4 +19,7 @@ app.use('/', indexRouter);
 app.use('/ads', adsRouter);
 app.use('/users', usersRouter);
 
+// for develop
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 module.exports = app;
