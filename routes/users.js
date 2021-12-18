@@ -29,13 +29,11 @@ router.post('/login', async function(req, res, next) {
 });
 
 router.post('/signup', async function(req, res, next) {
-  let name = req.body.name;
-  let surname = req.body.surname;
   let email = req.body.email;
-  let mobile = req.body.mobile;
   let password = req.body.password;
+  let is_admin = req.body.is_admin;
 
-  await users.createUser(name, surname, email, mobile, password);
+  await users.createUser(email, password, is_admin);
   res.json({"validated": true});
 
 })

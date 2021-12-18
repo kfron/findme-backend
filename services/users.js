@@ -1,12 +1,12 @@
 const db = require('./db');
 const auth = require('./auth');
 
-async function createUser(name, surname, email, mobile, password) {
+async function createUser(email, password, is_admin) {
     auth.bcrypt.hash(password, auth.saltRounds, function (err, hash) {
         db
         .query(
-            'INSERT INTO users(name, surname, email, mobile, password, registeredat, is_admin) VALUES ($1, $2, $3, $4, $5, now(), false);', 
-            [name, surname, email, mobile, hash])
+            'INSERT INTO users(email, password, registeredat, is_admin) VALUES ($1, $2, now(), $3);', 
+            [email, hash, is_admin])
         .catch(err => console.error('Error executing query', err.stack))
     })
 }
