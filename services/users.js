@@ -5,7 +5,7 @@ async function createUser(email, password, is_admin) {
     auth.bcrypt.hash(password, auth.saltRounds, function (err, hash) {
         db
         .query(
-            'INSERT INTO users(email, password, registeredat, is_admin) VALUES ($1, $2, now(), $3);', 
+            'INSERT INTO users(email, password, created_at, is_admin) VALUES ($1, $2, now(), $3);', 
             [email, hash, is_admin])
         .catch(err => console.error('Error executing query', err.stack))
     })
