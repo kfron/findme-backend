@@ -32,8 +32,14 @@ router.post('/signup', async function(req, res, next) {
   let email = req.body.email;
   let password = req.body.password;
   let is_admin = req.body.is_admin;
+  let user = null;
 
-  await users.createUser(email, password, is_admin);
+  try {
+    user = (await users.createUser(email, password, is_admin));
+  } catch (err) {
+    console.log("Error while creating user ", err.message);
+    next(err);
+  }
   res.json({"validated": true});
 
 })
