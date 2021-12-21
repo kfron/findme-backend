@@ -14,7 +14,7 @@ async function createUser(email, password, is_admin) {
 
 async function getUser(email) {
     return db.query(
-        'SELECT password FROM users WHERE email = $1', [email]
+        'SELECT * FROM users WHERE email = $1', [email]
     );
 }
 

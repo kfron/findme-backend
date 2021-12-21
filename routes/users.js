@@ -6,23 +6,23 @@ const users = require('../services/users');
 router.post('/login', async function(req, res, next) {
   let email = req.body.email;
   let password = req.body.password;
-  let dbPassword = null
+  let user = null
   
   try {
-    dbPassword = (await users.getUser(email))[0]?.password;
+    user = (await users.getUser(email))[0];
   } catch (err) {
     console.error(`Error while getting user `, err.message);
     next(err);
   }
 
-  if (!dbPassword) {
-    res.json({"validated": false})
+  if (!user) {
+    res.status(401).json({'error': 'Incorrect email'})
   } else {
-    bcrypt.compare(password, dbPassword, function (err, result) {
+    bcrypt.compare(password, user.password, function (err, result) {
       if (result == true) {
-        res.json({"validated": true})
+        res.status(200).json({email: user.email, password: password, is_admin: user.is_admin})
       } else {
-        res.json({"validated": false})
+        res.status(401).json({'error': 'Incorrect password'})
       }
     })
   }
@@ -40,7 +40,7 @@ router.post('/signup', async function(req, res, next) {
     console.log("Error while creating user ", err.message);
     next(err);
   }
-  res.json({"validated": true});
+  res.status(200).json(user);
 
 })
 
