@@ -16,13 +16,13 @@ router.post('/login', async function (req, res, next) {
   }
 
   if (!user) {
-    res.json({ 'error': 'Incorrect email' })
+    res.status(500).json({ message: `User with this email doesn't exist.` })
   } else {
     bcrypt.compare(password, user.password, function (err, result) {
       if (result == true) {
-        res.json({ email: user.email, password: password, is_admin: user.is_admin })
+        res.json(user);
       } else {
-        res.json({ 'error': 'Incorrect password' })
+        res.status(500).json({ message: 'Incorrect password.' });
       }
     })
   }
@@ -34,9 +34,10 @@ router.post('/signup', async function (req, res, next) {
   let is_admin = req.body.is_admin;
   let user = null;
 
-  let test = await users.getUser(email)
-  if (test) {
-    res.json({ 'error': 'Email address taken' })
+  let exists = await users.getUser(email)
+  console.log(exists)
+  if (exists) {
+    res.status(500).json({ message: 'Email address already taken.' })
   } else {
     try {
       user = (await users.createUser(email, password, is_admin));
