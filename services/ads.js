@@ -16,7 +16,20 @@ async function getAd(id) {
     return data;
 }
 
+async function createAd(userId, name, age, image, description) {
+    const data = await db.query(
+        'INSERT INTO ' +
+        'ads(user_id, name, age, image, description) ' +
+        'VALUES ($1, $2, $3, $4, $5) ' +
+        'RETURNING *;', 
+        [userId, name, age, image, description]
+    );
+
+    return data;
+}
+
 module.exports = {
     getAdsList,
-    getAd
+    getAd,
+    createAd
 }
