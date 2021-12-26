@@ -22,11 +22,14 @@ router.get('/getAd', async function (req, res, next) {
 });
 
 router.post('/createAd', async function (req, res, next) {
+  console.log('something received');
   let userId = req.body.userId;
   let name = req.body.name;
   let age = req.body.age;
   let image = req.body.image;
   let description = req.body.description;
+
+  console.log(req.body);
 
   let ad = null;
   try {
