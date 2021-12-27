@@ -35,7 +35,6 @@ router.post('/signup', async function (req, res, next) {
   let user = null;
 
   let exists = await users.getUser(email)
-  console.log(exists)
   if (exists) {
     res.status(500).json({ message: 'Email address already taken.' })
   } else {

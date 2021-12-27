@@ -2,15 +2,14 @@ const express = require('express');
 const router = express.Router();
 const ads = require('../services/ads');
 const multer = require('multer');
-const { path } = require('../app');
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/')
+  destination: function (req, file, callback) {
+    callback(null, './uploads/');
   },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname))
+  filename: function (req, file, callback) {
+    callback(null, file.originalname);
   }
-})
+});
 const upload = multer({ storage: storage })
 
 router.get('/getAdsList', async function (req, res, next) {
@@ -32,27 +31,24 @@ router.get('/getAd', async function (req, res, next) {
   }
 });
 
-router.post('/createAd', upload.single('image'), function (req, res, next) {
-  console.log('something received');
-  console.log(req);
-  /*let userId = req.body.userId;
-  let name = req.body.name;
-  let age = req.body.age;
-  let image = req.body.image;
-  let description = req.body.description;
-
-  console.log(req.body);
-*/
-  console.log(req.file);
-  console.log(req.body);
-  let ad = null;
-  /*try {
-    ad = await ads.createAd(userId, name, age, image, description);
-  } catch (err) {
-    console.log('Error while creating ad ', err.message);
-    next(err);
-  }*/
-  res.json(ad);
+router.post('/createAd', upload.single('image'), async function (req, res, next) {
+  if (!req.file) {
+    res.status(500).json({ message: `Image didn't arrive.` });
+  } else {
+    let userId = req.body.userId;
+    let name = req.body.name;
+    let age = req.body.age;
+    let image = 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=980:*';
+    let description = req.body.description;
+    let ad = null;
+    try {
+      ad = (await ads.createAd(userId, name, age, image, description));
+    } catch (err) {
+      console.log("Error while creating user", err.message);
+      next(err);
+    }
+    res.json(ad);
+  }
 });
 
 module.exports = router;
