@@ -44,11 +44,26 @@ router.post('/createAd', upload.single('image'), async function (req, res, next)
     try {
       ad = (await ads.createAd(userId, name, age, image, description));
     } catch (err) {
-      console.log("Error while creating user", err.message);
+      console.log("Error while creating ad", err.message);
       next(err);
     }
     res.json(ad);
   }
+});
+
+router.put('/updateAd', upload.single('image'), async function (req, res, next) {
+  let id = req.body.id;
+  let name = req.body.name;
+  let age = req.body.age;
+  let image = 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=980:*';
+  let description = req.body.description;
+  try {
+    await ads.updateAd(id, name, age, image, description);
+  } catch (err) {
+    console.log("Error while updating ad", err.message);
+    next(err);
+  }
+  res.json({});
 });
 
 module.exports = router;
