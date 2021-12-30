@@ -34,9 +34,20 @@ async function updateAd(id, name, age, image, description) {
         'age = $2, ' +
         'image = $3, ' +
         'description = $4 ' +
-        'WHERE id = $5',
+        'WHERE id = $5;',
         [name, age, image, description, id]
     );
+    return data;
+}
+
+async function deleteAd(id) {
+    console.log("DELETING: ", id);
+    const data = await db.query(
+        'DELETE FROM ads ' +
+        'WHERE id = $1;',
+        [id]
+    );
+
     return data;
 }
 
@@ -44,5 +55,6 @@ module.exports = {
     getAdsList,
     getAd,
     createAd,
-    updateAd
+    updateAd,
+    deleteAd
 }

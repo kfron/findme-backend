@@ -44,7 +44,7 @@ router.post('/createAd', upload.single('image'), async function (req, res, next)
     try {
       ad = (await ads.createAd(userId, name, age, image, description));
     } catch (err) {
-      console.log("Error while creating ad", err.message);
+      console.log("Error while creating ad ", err.message);
       next(err);
     }
     res.json(ad);
@@ -60,10 +60,23 @@ router.put('/updateAd', upload.single('image'), async function (req, res, next) 
   try {
     await ads.updateAd(id, name, age, image, description);
   } catch (err) {
-    console.log("Error while updating ad", err.message);
+    console.log("Error while updating ad ", err.message);
     next(err);
   }
   res.json({});
 });
+
+router.delete('/deleteAd', async function (req, res, next) {
+  let id = +req.query.id;
+
+  try {
+    await ads.deleteAd(id);
+  } catch (err) {
+    console.log("Error while deleting ad ", err.message);
+    next(err);
+  }
+
+  res.json({});
+})
 
 module.exports = router;
