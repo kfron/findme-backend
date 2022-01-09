@@ -13,8 +13,11 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 router.get('/getAdsList', async function (req, res, next) {
+  let lat = +req.query.lat;
+  let lon = +req.query.lon;
+  let dist = +req.query.dist;
   try {
-    res.json(await ads.getAdsList());
+    res.json(await ads.getAdsList(lat, lon, dist));
   } catch (err) {
     console.error(`Error while getting ads `, err.message);
     next(err);
@@ -40,9 +43,11 @@ router.post('/createAd', upload.single('image'), async function (req, res, next)
     let age = req.body.age;
     let image = 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=980:*';
     let description = req.body.description;
+    let lat = req.body.lat;
+    let lon = req.body.lon;
     let ad = null;
     try {
-      ad = (await ads.createAd(userId, name, age, image, description));
+      ad = (await ads.createAd(userId, name, age, image, description, lat, lon));
     } catch (err) {
       console.log("Error while creating ad ", err.message);
       next(err);

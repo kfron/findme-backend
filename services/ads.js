@@ -1,8 +1,19 @@
 const db = require('./db');
 
-async function getAdsList() {
+async function getAdsList(lat, lon, dist) {
     const data = await db.query(
-        'SELECT * FROM ads ORDER BY created_at DESC;'
+        `
+        WITH newest_closest AS(
+            SELECT DISTINCT ON (ad_id) ad_id, found_at, lat, lon
+            FROM findings
+            WHERE (point(lat, lon) <-> point($1, $2)) < $3
+            ORDER BY ad_id, found_at DESC)
+        SELECT a.*, n.found_at, n.lat, n.lon
+            FROM ads a
+            JOIN newest_closest n
+            ON a.id = n.ad_id;
+        `,
+        [lat, lon, dist]
     );
 
     return data;
@@ -16,15 +27,28 @@ async function getAd(id) {
     return data;
 }
 
-async function createAd(userId, name, age, image, description) {
-    const data = await db.query(
-        'INSERT INTO ' +
-        'ads(user_id, name, age, image, description) ' +
-        'VALUES ($1, $2, $3, $4, $5) ' +
-        'RETURNING *;',
+async function createAd(userId, name, age, image, description, lat, lon) {
+    const adData = await db.query(
+        `
+        INSERT INTO
+            ads(user_id, name, age, image, description)
+        VALUES
+            ($1, $2, $3, $4, $5)
+        RETURNING *
+        `,
         [userId, name, age, image, description]
     );
-    return data;
+
+    const findingData = await db.query(
+        `
+        INSERT INTO
+            findings(ad_id, found_at, lat, lon)
+        VALUES
+            ($1, now(), $2, $3)
+        `,
+        [adData[0].id, lat, lon]
+    )
+    return adData;
 }
 
 async function updateAd(id, name, age, image, description) {
@@ -41,7 +65,6 @@ async function updateAd(id, name, age, image, description) {
 }
 
 async function deleteAd(id) {
-    console.log("DELETING: ", id);
     const data = await db.query(
         'DELETE FROM ads ' +
         'WHERE id = $1;',

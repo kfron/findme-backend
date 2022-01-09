@@ -1,9 +1,6 @@
 const db = require('./db');
 
 async function getClosestTo(lat, lon, dist) {
-    const testDate = await db.query(
-        `SELECT found_at from findings LIMIT 1;`
-    )
     const data = await db.query(
         `
         SELECT f.*, a.name, a.image, a.user_id, a.age
