@@ -6,9 +6,9 @@ async function getClosestTo(lat, lon, dist) {
         SELECT f.*, a.name, a.image, a.user_id, a.age
         FROM findings f 
         JOIN ads a ON f.ad_id = a.id
-        WHERE (point(lat, lon) <-> point($1, $2)) < $3 
+        WHERE calculate_distance(lat, lon, $1, $2, 'K') < $3
         AND next_id IS NULL 
-        ORDER BY (point(lat, lon) <-> point($1, $2))
+        ORDER BY calculate_distance(lat, lon, $1, $2, 'K')
         `,
         [lat, lon, dist]
     );
