@@ -6,7 +6,7 @@ async function getAdsList(lat, lon, dist) {
         WITH newest_closest AS(
             SELECT DISTINCT ON (ad_id) ad_id, found_at, lat, lon
             FROM findings
-            WHERE (point(lat, lon) <-> point($1, $2)) < $3
+            WHERE calculate_distance(lat, lon, $1, $2, 'K') < $3
             ORDER BY ad_id, found_at DESC)
         SELECT a.*, n.found_at, n.lat, n.lon
             FROM ads a
