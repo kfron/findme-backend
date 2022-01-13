@@ -47,23 +47,53 @@ async function createAd(userId, name, age, image, description, lat, lon) {
 
 async function updateAd(id, name, age, image, description) {
 	return await db.query(
-		'UPDATE ads SET ' +
-		'name = $1, ' +
-		'age = $2, ' +
-		'image = $3, ' +
-		'description = $4 ' +
-		'WHERE id = $5;',
+		`
+		UPDATE ads SET
+			name = $1
+			age = $2
+			image = $3
+			description = $4
+		WHERE id = $5
+		`,
 		[name, age, image, description, id]
 	);
 }
 
 async function deleteAd(id) {
 	return await db.query(
-		'DELETE FROM ads ' +
-		'WHERE id = $1;',
+		`
+		DELETE FROM ads
+		WHERE id = $1
+		`,
 		[id]
 	);
 
+}
+
+async function getAdsOfUser(userId) {
+	return await db.query(
+		`
+		SELECT a.*, f.found_at, f.lat, f.lon
+        FROM findings f 
+        JOIN ads a ON f.ad_id = a.id
+        WHERE a.user_id = $1
+		AND next_id IS NULL 
+		`,
+		[userId]
+	)
+}
+
+async function getAdsPingedByUser(userId) {
+	return await db.query(
+		`
+		SELECT a.*, f.found_at, f.lat, f.lon
+        FROM findings f 
+        JOIN ads a ON f.ad_id = a.id
+        WHERE f.found_by_id = $1
+		AND next_id IS NULL 
+		`,
+		[userId]
+	)
 }
 
 module.exports = {
@@ -71,5 +101,7 @@ module.exports = {
 	getAd,
 	createAd,
 	updateAd,
-	deleteAd
+	deleteAd,
+	getAdsOfUser,
+	getAdsPingedByUser
 }

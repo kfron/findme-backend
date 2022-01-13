@@ -49,4 +49,32 @@ router.post('/signup', async function (req, res, next) {
 
 })
 
+router.put('/changeEmail', async function (req, res, next) {
+	let id = +req.body.id;
+	let email = req.body.email;
+
+	try {
+		user = (await users.changeEmail(id, email));
+	} catch (err) {
+		console.log("Error while changing email", err.message);
+		next(err);
+	}
+	res.json(user);
+
+})
+
+router.put('/changePassword', async function (req, res, next) {
+	let id = +req.body.id;
+	let password = req.body.password;
+
+	try {
+		user = (await users.changePassword(id, password));
+	} catch (err) {
+		console.log("Error while changing email", err.message);
+		next(err);
+	}
+	res.json(user);
+
+})
+
 module.exports = router;

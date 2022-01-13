@@ -84,4 +84,26 @@ router.delete('/deleteAd', async function (req, res, next) {
 	res.json({});
 })
 
+router.get('/getMyAds', async function (req, res, next) {
+	let userId = +req.query.id;
+
+	try {
+		res.json(await ads.getAdsOfUser(userId));
+	} catch (err) {
+		console.log("Error while getting user's ads ", err.message);
+		next(err);
+	}
+})
+
+router.get('/getMyPings', async function (req, res, next) {
+	let userId = +req.query.id;
+
+	try {
+		res.json(await ads.getAdsPingedByUser(userId));
+	} catch (err) {
+		console.log("Error while getting ads pinged by user ", err.message);
+		next(err);
+	}
+})
+
 module.exports = router;
