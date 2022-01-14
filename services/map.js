@@ -42,7 +42,7 @@ async function getPath(startId) {
 	);
 }
 
-async function createFinding(adId, lat, lon) {
+async function createFinding(adId, userId, lat, lon) {
 	const prevId = (await db.query(
 		`
         SELECT id 
@@ -57,11 +57,11 @@ async function createFinding(adId, lat, lon) {
 	const data = await db.query(
 		`
         INSERT INTO
-        findings(ad_id, found_at, prev_id, lat, lon)
-        VALUES ($1, now(), $2, $3, $4)
+        findings(ad_id, found_at, prev_id, lat, lon, found_by_id)
+        VALUES ($1, now(), $2, $3, $4, $5)
         RETURNING *
         `,
-		[adId, prevId, lat, lon]
+		[adId, prevId, lat, lon, userId]
 	);
 	return data;
 }

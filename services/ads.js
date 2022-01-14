@@ -41,11 +41,11 @@ async function createAd(userId, name, age, image, description, lat, lon) {
 	await db.query(
 		`
         INSERT INTO
-            findings(ad_id, found_at, lat, lon)
+            findings(ad_id, found_at, lat, lon, found_by_id)
         VALUES
-            ($1, now(), $2, $3)
+            ($1, now(), $2, $3, $4)
         `,
-		[adData[0].id, lat, lon]
+		[adData[0].id, lat, lon, userId]
 	)
 	return adData;
 }

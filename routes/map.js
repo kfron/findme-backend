@@ -36,12 +36,13 @@ router.get('/getNewestFinding', async function (req, res, next) {
 
 router.post('/createFinding', async function (req, res, next) {
 	let adId = +req.body.adId;
+	let userId = +req.body.userId;
 	let lat = +req.body.lat;
 	let lon = +req.body.lon;
 
 	let result = null;
 	try {
-		result = (await map.createFinding(adId, lat, lon));
+		result = (await map.createFinding(adId, userId, lat, lon));
 	} catch (err) {
 		console.log("Error while creating a finding ", err.message);
 		next(err);
