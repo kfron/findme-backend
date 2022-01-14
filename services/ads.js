@@ -16,7 +16,12 @@ async function getAdsList(lat, lon, dist) {
 
 async function getAd(id) {
 	return await db.query(
-		'SELECT * FROM ads WHERE id = $1;', [id]
+		`
+		SELECT a.*, f.found_at, f.lat, f.lon
+        FROM findings f 
+        JOIN ads a ON f.ad_id = a.id
+		WHERE a.id = $1;
+		`, [id]
 	);
 
 }

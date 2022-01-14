@@ -24,6 +24,16 @@ router.get('/getPath', async function (req, res, next) {
 	}
 });
 
+router.get('/getNewestFinding', async function (req, res, next) {
+	let adId = +req.query.adId;
+	try {
+		res.json(await map.getNewestFinding(adId));
+	} catch (err) {
+		console.error(`Error while getting getting newest finding of an ad `, err.message);
+		next(err);
+	}
+});
+
 router.post('/createFinding', async function (req, res, next) {
 	let adId = +req.body.adId;
 	let lat = +req.body.lat;

@@ -14,6 +14,18 @@ async function getClosestTo(lat, lon, dist) {
 	);
 }
 
+async function getNewestFinding(adId) {
+	return await db.query(
+		`
+		SELECT *
+		FROM findings
+		WHERE ad_id = $1
+		AND next_id IS NULL
+		`,
+		[adId]
+	);
+}
+
 async function getPath(startId) {
 	return await db.query(
 		`
@@ -57,5 +69,6 @@ async function createFinding(adId, lat, lon) {
 module.exports = {
 	getClosestTo,
 	getPath,
-	createFinding
+	createFinding,
+	getNewestFinding
 }
