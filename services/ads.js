@@ -20,7 +20,7 @@ async function getAd(id) {
 		SELECT a.*, f.found_at, f.lat, f.lon
         FROM findings f 
         JOIN ads a ON f.ad_id = a.id
-		WHERE a.id = $1;
+		WHERE a.id = $1 AND next_id IS NULL
 		`, [id]
 	);
 
@@ -51,17 +51,30 @@ async function createAd(userId, name, age, image, description, lat, lon) {
 }
 
 async function updateAd(id, name, age, image, description) {
-	return await db.query(
-		`
+	if (image === null) {
+		return await db.query(
+			`
+			UPDATE ads SET
+				name = $1,
+				age = $2,
+				description = $3
+			WHERE id = $4
+			`,
+			[name, age, description, id]
+		);
+	} else {
+		return await db.query(
+			`
 		UPDATE ads SET
-			name = $1
-			age = $2
-			image = $3
+			name = $1,
+			age = $2,
+			image = $3,
 			description = $4
 		WHERE id = $5
 		`,
-		[name, age, image, description, id]
-	);
+			[name, age, image, description, id]
+		);
+	}
 }
 
 async function deleteAd(id) {

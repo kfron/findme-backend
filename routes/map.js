@@ -10,7 +10,7 @@ router.get('/getClosestTo', async function (req, res, next) {
 		res.json(await map.getClosestTo(lat, lon, dist));
 	} catch (err) {
 		console.error(`Error while getting closest findings `, err.message);
-		next(err);
+		res.status(500).json({ message: err.message });
 	}
 });
 
@@ -20,7 +20,7 @@ router.get('/getPath', async function (req, res, next) {
 		res.json(await map.getPath(startId));
 	} catch (err) {
 		console.error(`Error while getting getting a path `, err.message);
-		next(err);
+		res.status(500).json({ message: err.message });
 	}
 });
 
@@ -30,7 +30,7 @@ router.get('/getNewestFinding', async function (req, res, next) {
 		res.json(await map.getNewestFinding(adId));
 	} catch (err) {
 		console.error(`Error while getting getting newest finding of an ad `, err.message);
-		next(err);
+		res.status(500).json({ message: err.message });
 	}
 });
 
@@ -40,14 +40,13 @@ router.post('/createFinding', async function (req, res, next) {
 	let lat = +req.body.lat;
 	let lon = +req.body.lon;
 
-	let result = null;
 	try {
-		result = (await map.createFinding(adId, userId, lat, lon));
+		await map.createFinding(adId, userId, lat, lon);
 	} catch (err) {
 		console.log("Error while creating a finding ", err.message);
-		next(err);
+		res.status(500).json({ message: err.message });
 	}
-	res.json(result);
+	res.json({});
 })
 
 module.exports = router;

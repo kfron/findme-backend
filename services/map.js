@@ -17,9 +17,10 @@ async function getClosestTo(lat, lon, dist) {
 async function getNewestFinding(adId) {
 	return await db.query(
 		`
-		SELECT *
-		FROM findings
-		WHERE ad_id = $1
+		SELECT f.*, a.name, a.image, a.user_id, a.age
+        FROM findings f 
+        JOIN ads a ON f.ad_id = a.id
+		WHERE f.ad_id = $1
 		AND next_id IS NULL
 		`,
 		[adId]
@@ -36,7 +37,10 @@ async function getPath(startId) {
             SELECT f.*
                 FROM findings f
             JOIN path p ON p.prev_id = f.id)
-        SELECT * FROM path ORDER BY found_at;
+        SELECT p.*, a.name, a.image, a.user_id, a.age 
+		FROM path p
+		JOIN ads a ON p.ad_id = a.id 
+		ORDER BY p.found_at;
         `,
 		[startId]
 	);
@@ -54,16 +58,14 @@ async function createFinding(adId, userId, lat, lon) {
 		[adId]
 	))[0]?.id;
 	
-	const data = await db.query(
+	return await db.query(
 		`
         INSERT INTO
         findings(ad_id, found_at, prev_id, lat, lon, found_by_id)
         VALUES ($1, now(), $2, $3, $4, $5)
-        RETURNING *
         `,
 		[adId, prevId, lat, lon, userId]
 	);
-	return data;
 }
 
 module.exports = {

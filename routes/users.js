@@ -12,7 +12,7 @@ router.post('/login', async function (req, res, next) {
 		user = (await users.getUser(email))[0];
 	} catch (err) {
 		console.error(`Error while getting user `, err.message);
-		next(err);
+		res.status(500).json({ message: err.message })
 	}
 
 	if (!user) {
@@ -31,18 +31,17 @@ router.post('/login', async function (req, res, next) {
 router.post('/signup', async function (req, res, next) {
 	let email = req.body.email;
 	let password = req.body.password;
-	let is_admin = req.body.is_admin;
 	let user = null;
 
-	let exists = await users.getUser(email)
+	let exists = (await users.getUser(email))[0];
 	if (exists) {
 		res.status(500).json({ message: 'Email address already taken.' })
 	} else {
 		try {
-			user = (await users.createUser(email, password, is_admin));
+			user = (await users.createUser(email, password));
 		} catch (err) {
 			console.log("Error while creating user", err.message);
-			next(err);
+			res.status(500).json({ message: err.message })
 		}
 		res.json(user);
 	}
@@ -52,26 +51,33 @@ router.post('/signup', async function (req, res, next) {
 router.put('/changeEmail', async function (req, res, next) {
 	let id = +req.body.id;
 	let email = req.body.email;
+	let user = null;
 
-	try {
-		user = (await users.changeEmail(id, email));
-	} catch (err) {
-		console.log("Error while changing email", err.message);
-		next(err);
+	let exists = (await users.getUser(email))[0];
+	if (exists) {
+		res.status(500).json({ message: 'Email address already taken.' })
+	} else {
+		try {
+			user = (await users.changeEmail(id, email));
+		} catch (err) {
+			console.log("Error while changing email", err.message);
+			res.status(500).json({ message: err.message })
+		}
+		res.json(user);
 	}
-	res.json(user);
 
 })
 
 router.put('/changePassword', async function (req, res, next) {
 	let id = +req.body.id;
 	let password = req.body.password;
+	let user = null;
 
 	try {
 		user = (await users.changePassword(id, password));
 	} catch (err) {
 		console.log("Error while changing email", err.message);
-		next(err);
+		res.status(500).json({ message: err.message })
 	}
 	res.json(user);
 
