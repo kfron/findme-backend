@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const config = require('../config');
+const config = require('../configs/config');
 const pool = new Pool(config.db);
 
 async function query(query, params) {

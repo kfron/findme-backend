@@ -1,5 +1,5 @@
-const db = require('./db');
-const auth = require('./auth');
+const db = require('../configs/db');
+const auth = require('../configs/auth');
 
 async function createUser(email, password) {
 	const hash = await auth.bcrypt.hash(password, await auth.bcrypt.genSalt(auth.saltRounds))

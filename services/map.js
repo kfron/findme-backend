@@ -1,4 +1,4 @@
-const db = require('./db');
+const db = require('../configs/db');
 
 async function getClosestTo(lat, lon, dist) {
 	return await db.query(
