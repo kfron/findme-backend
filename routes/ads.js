@@ -23,6 +23,7 @@ router.get('/getAdsList', async function (req, res, next) {
 	} catch (err) {
 		console.error(`Error while getting ads `, err.message);
 		res.status(500).json({ message: err.message });
+		return;
 	}
 });
 
@@ -33,6 +34,7 @@ router.get('/getAd', async function (req, res, next) {
 	} catch (err) {
 		console.error(`Error while getting ad `, err.message);
 		res.status(500).json({ message: err.message });
+		return;
 	}
 });
 
@@ -47,14 +49,13 @@ router.post('/createAd', upload.single('image'), async function (req, res, next)
 		let description = req.body.description;
 		let lat = req.body.lat;
 		let lon = req.body.lon;
-		let ad = null;
 		try {
-			ad = (await ads.createAd(userId, name, age, image, description, lat, lon));
+			res.json(await ads.createAd(userId, name, age, image, description, lat, lon));
 		} catch (err) {
 			console.log("Error while creating ad ", err.message);
 			res.status(500).json({ message: err.message });
+			return;
 		}
-		res.json(ad);
 	}
 });
 
@@ -74,6 +75,7 @@ router.put('/updateAd', upload.single('image'), async function (req, res, next) 
 		} catch (err) {
 			console.log("Error while getting ad ", err.message);
 			res.status(500).json({ message: err.message });
+			return;
 		}
 		image = req.file.filename;
 	}
@@ -83,6 +85,7 @@ router.put('/updateAd', upload.single('image'), async function (req, res, next) 
 	} catch (err) {
 		console.log("Error while updating ad ", err.message);
 		res.status(500).json({ message: err.message });
+		return;
 	}
 	res.json({});
 });
@@ -95,6 +98,7 @@ router.delete('/deleteAd', async function (req, res, next) {
 	} catch (err) {
 		console.log("Error while deleting ad ", err.message);
 		res.status(500).json({ message: err.message });
+		return;
 	}
 
 	res.json({});
@@ -108,6 +112,7 @@ router.get('/getMyAds', async function (req, res, next) {
 	} catch (err) {
 		console.log("Error while getting user's ads ", err.message);
 		res.status(500).json({ message: err.message });
+		return;
 	}
 })
 
@@ -119,6 +124,7 @@ router.get('/getMyPings', async function (req, res, next) {
 	} catch (err) {
 		console.log("Error while getting ads pinged by user ", err.message);
 		res.status(500).json({ message: err.message });
+		return;
 	}
 })
 

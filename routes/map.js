@@ -11,6 +11,7 @@ router.get('/getClosestTo', async function (req, res, next) {
 	} catch (err) {
 		console.error(`Error while getting closest findings `, err.message);
 		res.status(500).json({ message: err.message });
+		return;
 	}
 });
 
@@ -21,6 +22,7 @@ router.get('/getPath', async function (req, res, next) {
 	} catch (err) {
 		console.error(`Error while getting getting a path `, err.message);
 		res.status(500).json({ message: err.message });
+		return;
 	}
 });
 
@@ -31,6 +33,7 @@ router.get('/getNewestFinding', async function (req, res, next) {
 	} catch (err) {
 		console.error(`Error while getting getting newest finding of an ad `, err.message);
 		res.status(500).json({ message: err.message });
+		return;
 	}
 });
 
@@ -45,6 +48,7 @@ router.post('/createFinding', async function (req, res, next) {
 	} catch (err) {
 		console.log("Error while creating a finding ", err.message);
 		res.status(500).json({ message: err.message });
+		return;
 	}
 	res.json({});
 })
