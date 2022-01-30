@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const map = require('../services/map');
 
+/**
+ * Zapytanie o listę napotkań w określonej odległości od podanych koordynatów
+ */
 router.get('/getClosestTo', async function (req, res, next) {
 	let lat = +req.query.lat;
 	let lon = +req.query.lon;
@@ -15,6 +18,9 @@ router.get('/getClosestTo', async function (req, res, next) {
 	}
 });
 
+/**
+ * Zapytanie o listę napotkań tworzących ścieżkę w ramach jednego zgłoszenia
+ */
 router.get('/getPath', async function (req, res, next) {
 	let startId = +req.query.startId;
 	try {
@@ -26,6 +32,9 @@ router.get('/getPath', async function (req, res, next) {
 	}
 });
 
+/**
+ * Zapytanie o najnowsze napotkanie dla konkretnego zgłoszenia
+ */
 router.get('/getNewestFinding', async function (req, res, next) {
 	let adId = +req.query.adId;
 	try {
@@ -37,6 +46,9 @@ router.get('/getNewestFinding', async function (req, res, next) {
 	}
 });
 
+/**
+ * Żądanie stworzenia nowego napotkania dla konkretnego zgłoszenia
+ */
 router.post('/createFinding', async function (req, res, next) {
 	let adId = +req.body.adId;
 	let userId = +req.body.userId;

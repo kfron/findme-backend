@@ -21,7 +21,6 @@ app.use('/ads', adsRouter);
 app.use('/users', usersRouter);
 app.use('/map', mapRouter);
 
-// for develop
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 module.exports = app;

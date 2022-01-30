@@ -14,6 +14,9 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage })
 
+/**
+ * Zapytanie o listę zgłoszeń w określonej odległości od podanych koordynatów
+ */
 router.get('/getAdsList', async function (req, res, next) {
 	let lat = +req.query.lat;
 	let lon = +req.query.lon;
@@ -27,6 +30,9 @@ router.get('/getAdsList', async function (req, res, next) {
 	}
 });
 
+/**
+ * Zapytanie o konkretne zgłoszenie
+ */
 router.get('/getAd', async function (req, res, next) {
 	let id = +req.query.id;
 	try {
@@ -38,6 +44,9 @@ router.get('/getAd', async function (req, res, next) {
 	}
 });
 
+/**
+ * Żądanie stworzenia nowego zgłoszenia
+ */
 router.post('/createAd', upload.single('image'), async function (req, res, next) {
 	if (!req.file) {
 		res.status(500).json({ message: `Image didn't arrive.` });
@@ -59,6 +68,9 @@ router.post('/createAd', upload.single('image'), async function (req, res, next)
 	}
 });
 
+/**
+ * Żądanie aktualizacji danych zgłoszenia
+ */
 router.put('/updateAd', upload.single('image'), async function (req, res, next) {
 	let id = +req.body.id;
 	let name = req.body.name;
@@ -90,6 +102,9 @@ router.put('/updateAd', upload.single('image'), async function (req, res, next) 
 	res.json({});
 });
 
+/**
+ * Żądanie usunięcia konkretnego zgłoszenia
+ */
 router.delete('/deleteAd', async function (req, res, next) {
 	let id = +req.query.id;
 
@@ -104,6 +119,9 @@ router.delete('/deleteAd', async function (req, res, next) {
 	res.json({});
 })
 
+/**
+ * Zapytanie o listę zgłoszeń stworoznych przez konkretnego użytkownika
+ */
 router.get('/getMyAds', async function (req, res, next) {
 	let userId = +req.query.id;
 
@@ -116,6 +134,9 @@ router.get('/getMyAds', async function (req, res, next) {
 	}
 })
 
+/**
+ * Zapytanie o listę zgłoszeń, przy których pomagał konkretny użytkownik
+ */
 router.get('/getMyPings', async function (req, res, next) {
 	let userId = +req.query.id;
 

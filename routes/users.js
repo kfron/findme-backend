@@ -3,6 +3,9 @@ const { bcrypt } = require('../configs/auth');
 const router = express.Router();
 const users = require('../services/users');
 
+/**
+ * Weryfikacja danych logowania użytkownika
+ */
 router.post('/login', async function (req, res, next) {
 	console.log(req.body);
 	let email = req.body.email;
@@ -33,6 +36,9 @@ router.post('/login', async function (req, res, next) {
 	}
 });
 
+/**
+ * Rejestracja nowego użytkownika
+ */
 router.post('/signup', async function (req, res, next) {
 	let email = req.body.email;
 	let password = req.body.password;
@@ -56,6 +62,9 @@ router.post('/signup', async function (req, res, next) {
 
 })
 
+/**
+ * Zmiana emaila istniejącego użytkownika
+ */
 router.put('/changeEmail', async function (req, res, next) {
 	let id = +req.body.id;
 	let email = req.body.email;
@@ -79,6 +88,9 @@ router.put('/changeEmail', async function (req, res, next) {
 
 })
 
+/**
+ * Zmiana hasła istniejącego użytkownika
+ */
 router.put('/changePassword', async function (req, res, next) {
 	let id = +req.body.id;
 	let password = req.body.password;
